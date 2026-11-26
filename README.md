@@ -30,8 +30,8 @@
 
 | Skill | 解决什么 | 触发词 | 版本 |
 |---|---|---|---|
-| [c2d-case-writing](./skills/c2d-case-writing/README.md) | C2D（设计稿转代码）图片校验用例：每条强制挂真实图片直链，并声明这张图为何能触发该规则 | C2D 图片校验、MasterGo 图片填充 / 导出、设计稿转代码图片测试 | `v0.1.0` |
-| [requirement-analysis](./skills/requirement-analysis/README.md) | 需求建模：十二段模型 + 可测性四问 + 自动化 A/B/C 分级，每条结论强制带来源 | 需求分析、需求建模、PRD 研读、需求评审、可测性评估、这个需求能不能自动化 | `v0.1.0` |
+| [c2d-case-writing](./skills/c2d-case-writing/README.md) | C2D（设计稿转代码）图片校验用例：每条强制挂真实图片直链，并声明这张图为何能触发该规则 | C2D 图片校验、MasterGo 图片导出 | `v0.1.0` |
+| [requirement-analysis](./skills/requirement-analysis/README.md) | 需求建模：十二段模型 + 可测性四问 + 自动化 A/B/C 分级，每条结论强制带来源 | 需求分析、需求建模、可测性评估、能否自动化 | `v0.1.0` |
 
 规划中（还没写，不列进上表）：测试策略、用例审查、接口契约测试、flaky 治理。
 
