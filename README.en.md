@@ -1,7 +1,7 @@
 [简体中文](./README.md) | [English](./README.en.md)
 
 <p align="center">
-  <img src="./assets/hero.svg" alt="xxuntuil-test-skills — a collection of testing skills you can install one at a time" width="820">
+  <img src="./assets/banner.svg" alt="xxuntuil-test-skills — a collection of testing skills you can install one at a time" width="820">
 </p>
 
 <h1 align="center">xxuntuil-test-skills</h1>
