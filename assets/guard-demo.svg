@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="600" viewBox="0 0 880 600" role="img" aria-label="两道闸门的真实终端输出：模板 0 错放行，坏样例 11 错 4 警退出码 1，链接核验 3 条通过 1 条预期失败">
+  <defs>
+    <clipPath id="card">
+      <rect x="0" y="0" width="880" height="600" rx="14"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <rect width="880" height="600" fill="#0d1117"/>
+    <rect width="880" height="44" fill="#161b22"/>
+    <line x1="0" y1="44" x2="880" y2="44" stroke="#21262d"/>
+
+    <circle cx="24" cy="22" r="6" fill="#ff5f57"/>
+    <circle cx="44" cy="22" r="6" fill="#febc2e"/>
+    <circle cx="64" cy="22" r="6" fill="#28c840"/>
+
+    <text x="440" y="27" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="12.5" fill="#8b949e">两道闸门 · 真实输出（2026-11-26 本地实测）</text>
+
+    <g font-family="'SF Mono',Menlo,Consolas,'Courier New',monospace" font-size="13" xml:space="preserve">
+      <text x="24" y="78" fill="#7ee787">$ python3 scripts/case_lint_c2d.py assets/case-template.md</text>
+      <text x="24" y="101" fill="#8b949e">文件：assets/case-template.md</text>
+      <text x="24" y="124" fill="#8b949e">模块 4 个 / 用例 5 条 / 优先级 {'P1': 3, 'P0': 2}</text>
+      <text x="24" y="147" fill="#56d364">✅ 无问题</text>
+      <text x="24" y="170" fill="#56d364">错误 0 / 告警 0 → 放行（告警需人工确认）</text>
+
+      <text x="24" y="216" fill="#7ee787">$ python3 scripts/case_lint_c2d.py 坏样例.md</text>
+      <text x="24" y="239" fill="#ff7b72">  ❌ E6  L5    被测图片段内无 http(s) 图片直链</text>
+      <text x="24" y="262" fill="#ff7b72">  ❌ E7  L5    被测图片段含占位表述</text>
+      <text x="24" y="285" fill="#ff7b72">  ❌ E8  L5    缺「为何能测到」——未说明该图特征如何触发这条规则</text>
+      <text x="24" y="308" fill="#ff7b72">  ❌ E10 L5    预期结果含不可判定表述「显示正常」</text>
+      <text x="24" y="331" fill="#8b949e">  … 其余 7 错 4 警从略</text>
+      <text x="24" y="354" fill="#ff7b72" font-weight="700">错误 11 / 告警 4 → 阻断定稿（退出码 1）</text>
+
+      <text x="24" y="400" fill="#7ee787">$ python3 scripts/check_image_links.py assets/case-template.md</text>
+      <text x="24" y="423" fill="#c9d1d9">链接核验：共 4 条 → OK 3 / 预期失败 1 / 失败 0</text>
+      <text x="24" y="446" fill="#56d364">✅ TC-01-01  200  image/jpeg  18.9KB   picsum.photos/id/1015/300/300</text>
+      <text x="24" y="469" fill="#56d364">✅ TC-02-01  200  image/webp   2.9KB   picsum.photos/seed/c2d/100/100.webp</text>
+      <text x="24" y="492" fill="#d29922">🟡 TC-03-01  404  text/plain   0B      id/99999/300/300  ← expect_status: 404</text>
+
+      <text x="24" y="538" fill="#8b949e">$ echo $?</text>
+      <text x="24" y="561" fill="#c9d1d9">0  ← 模板可交付　　1  ← 坏链或预期失败未声明</text>
+    </g>
+  </g>
+</svg>

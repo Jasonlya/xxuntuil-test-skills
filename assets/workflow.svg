@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="762" viewBox="0 0 880 762" role="img" aria-label="六阶段工作流：收输入、场景盘点、澄清、逐场景编写、交付核对、定稿，底部为两道闸门">
+  <rect x="0.5" y="0.5" width="879" height="761" rx="18" fill="#ffffff" stroke="#e2e8f0"/>
+
+  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif">
+    <text x="40" y="56" font-size="23" font-weight="700" fill="#0f172a">六阶段工作流</text>
+    <text x="40" y="84" font-size="13.5" fill="#64748b">遇到不确定项就停下来问你，不代答；每阶段产物落盘，中断后可凭文件续跑</text>
+  </g>
+
+  <line x1="56" y1="130" x2="56" y2="582" stroke="#e2e8f0" stroke-width="2"/>
+
+  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif">
+    <circle cx="56" cy="140" r="17" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5"/>
+    <text x="56" y="146" text-anchor="middle" font-size="15" font-weight="700" fill="#3730a3">1</text>
+    <text x="90" y="134" font-size="18" font-weight="700" fill="#0f172a">收输入</text>
+    <text x="90" y="160" font-size="13.5" fill="#475569">设计稿入口 · 产物形态 · 环境账号 · 图床策略，缺一件就停下来要</text>
+
+    <circle cx="56" cy="228" r="17" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5"/>
+    <text x="56" y="234" text-anchor="middle" font-size="15" font-weight="700" fill="#3730a3">2</text>
+    <text x="90" y="222" font-size="18" font-weight="700" fill="#0f172a">场景盘点</text>
+    <text x="90" y="248" font-size="13.5" fill="#475569">6 组 47 条规则逐条 include / exclude，排除必须写理由，不写视为漏测</text>
+
+    <circle cx="56" cy="316" r="17" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+    <text x="56" y="322" text-anchor="middle" font-size="15" font-weight="700" fill="#9a3412">3</text>
+    <text x="90" y="310" font-size="18" font-weight="700" fill="#0f172a">澄清 · 等你决定</text>
+    <text x="90" y="336" font-size="13.5" fill="#475569">填充模式看不出 · 超大图约定 · 签名有效期 · 格式降级 · 阈值来源</text>
+
+    <circle cx="56" cy="404" r="17" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5"/>
+    <text x="56" y="410" text-anchor="middle" font-size="15" font-weight="700" fill="#3730a3">4</text>
+    <text x="90" y="398" font-size="18" font-weight="700" fill="#0f172a">逐场景编写</text>
+    <text x="90" y="424" font-size="13.5" fill="#475569">一 case 一图，每条都写清「这张图的什么特征让规则被破坏时显形」</text>
+
+    <circle cx="56" cy="492" r="17" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5"/>
+    <text x="56" y="498" text-anchor="middle" font-size="15" font-weight="700" fill="#3730a3">5</text>
+    <text x="90" y="486" font-size="18" font-weight="700" fill="#0f172a">交付核对</text>
+    <text x="90" y="512" font-size="13.5" fill="#475569">规则覆盖 · 图片有效性 · 零上下文可执行（随机抽 3 条复述）</text>
+
+    <circle cx="56" cy="580" r="17" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+    <text x="56" y="586" text-anchor="middle" font-size="15" font-weight="700" fill="#15803d">6</text>
+    <text x="90" y="574" font-size="18" font-weight="700" fill="#0f172a">定稿</text>
+    <text x="90" y="600" font-size="13.5" fill="#475569">两道闸门全绿才允许交付，并从 markmap 单向抽取机读 Schema</text>
+  </g>
+
+  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="12">
+    <rect x="612" y="122" width="228" height="28" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="726" y="141" text-anchor="middle" fill="#64748b">待补清单 + TODO</text>
+    <rect x="612" y="210" width="228" height="28" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="726" y="229" text-anchor="middle" fill="#64748b">场景覆盖表</text>
+    <rect x="612" y="298" width="228" height="28" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="726" y="317" text-anchor="middle" fill="#64748b">澄清记录</text>
+    <rect x="612" y="386" width="228" height="28" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="726" y="405" text-anchor="middle" fill="#64748b">测试用例_markmap.md</text>
+    <rect x="612" y="474" width="228" height="28" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+    <text x="726" y="493" text-anchor="middle" fill="#64748b">自查清单</text>
+    <rect x="612" y="562" width="228" height="28" rx="8" fill="#ecfdf5" stroke="#a7f3d0"/>
+    <text x="726" y="581" text-anchor="middle" fill="#047857">schema.yaml + 核验报告</text>
+  </g>
+
+  <rect x="40" y="660" width="800" height="76" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif">
+    <text x="64" y="684" font-size="11.5" fill="#94a3b8">闸门一</text>
+    <text x="64" y="705" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="13.5" font-weight="600" fill="#0f172a">case_lint_c2d.py</text>
+    <text x="64" y="724" font-size="11.5" fill="#64748b">12 项 E + 6 项 W 红线</text>
+
+    <text x="322" y="684" font-size="11.5" fill="#94a3b8">闸门二</text>
+    <text x="322" y="705" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="13.5" font-weight="600" fill="#0f172a">check_image_links.py</text>
+    <text x="322" y="724" font-size="11.5" fill="#64748b">状态码 · Content-Type · 体积</text>
+
+    <text x="608" y="684" font-size="11.5" fill="#94a3b8">判定</text>
+    <text x="608" y="705" font-family="'SF Mono',Menlo,Consolas,monospace" font-size="13.5" font-weight="600" fill="#b91c1c">exit 0 才交付</text>
+    <text x="608" y="724" font-size="11.5" fill="#64748b">非 0 阻断定稿</text>
+  </g>
+</svg>
