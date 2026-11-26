@@ -31,7 +31,7 @@ Three admission criteria. Miss one and it does not get in: **a fixed output form
 | Skill | What it solves | Trigger phrases | Version |
 |---|---|---|---|
 | [c2d-case-writing](./skills/c2d-case-writing/README.md) | Image-validation test cases for design-to-code (C2D): every case carries a real image URL plus a statement of why that image triggers the rule | C2D image validation, MasterGo image export | `v0.1.0` |
-| [requirement-analysis](./skills/requirement-analysis/README.md) | Requirement modelling: a 12-section model, testability four questions, and A/B/C automation grading, every conclusion sourced; the output shape is defined by a schema, so downstream tools can parse it directly | Requirement analysis, testability assessment, can this be automated | `v0.2.0` |
+| [requirement-analysis](./skills/requirement-analysis/README.md) | Requirement analysis: four deliverables — function points, requirement test analysis, evidence ledger (every conclusion traced to a location and a verbatim quote), and open questions. The output shape is defined by a schema, so downstream tools can parse it directly | Requirement analysis, requirement review, requirement clarification, how to test this feature | `v0.3.0` |
 
 Planned (not written yet, deliberately kept out of the table): test strategy, case review, API contract testing, flaky-test triage.
 

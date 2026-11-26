@@ -140,6 +140,62 @@ def set_cell(marker: str, row_key: str, col: str, value: str):
     return apply
 
 
+def move_col(marker: str, col: str):
+    """把某列整列移到末尾（表头、分隔行、数据行同步移动），数据不错位。"""
+    def apply(text: str) -> str:
+        holder: dict[str, int] = {}
+
+        def fn(kind, cs):
+            if kind == "header" and col in cs:
+                holder["k"] = cs.index(col)
+            k = holder.get("k")
+            if k is None or k >= len(cs):
+                return cs
+            return cs[:k] + cs[k + 1:] + [cs[k]]
+        return table_block(text, marker, fn)
+    return apply
+
+
+def set_col(marker: str, col: str, value: str):
+    """把某列所有数据行设成同一个值，用来测枚举覆盖类约束。"""
+    def apply(text: str) -> str:
+        holder: dict[str, int] = {}
+
+        def fn(kind, cs):
+            if kind == "header" and col in cs:
+                holder["k"] = cs.index(col)
+            k = holder.get("k")
+            if k is None or kind in ("header", "sep"):
+                return cs
+            cs = list(cs)
+            if k < len(cs):
+                cs[k] = value
+            return cs
+        return table_block(text, marker, fn)
+    return apply
+
+
+def add_rows(marker: str, rows: list[str]):
+    """在某张表末尾追加数据行。"""
+    def apply(text: str) -> str:
+        lines = text.splitlines()
+        out, i = [], 0
+        while i < len(lines):
+            s = lines[i].strip()
+            if s.startswith("|") and marker in s:
+                j = i
+                while j < len(lines) and lines[j].strip().startswith("|"):
+                    out.append(lines[j])
+                    j += 1
+                out.extend(rows)
+                i = j
+                continue
+            out.append(lines[i])
+            i += 1
+        return "\n".join(out)
+    return apply
+
+
 def drop_rows(text: str, marker: str) -> str:
     """删掉某张表的全部数据行，只留表头与分隔行。"""
     lines = text.splitlines()
@@ -167,75 +223,100 @@ def build_cases(tpl: str) -> list[tuple[str, str, set[str]]]:
     """(说明, 变形后的文本, 期望命中的码集合)"""
     c: list[tuple[str, str, set[str]]] = []
 
-    c.append(("删掉第 12 段", tpl[: tpl.index("## 12. 验证边界与移交")], {"E001"}))
-    c.append(("接口表删失败态列", drop_col("| 编号 | 接口 |", "失败态")(tpl), {"E012"}))
-    c.append(("可测表删 OBS 列", drop_col("| 编号 | 对应规则 |", "OBS 观测点")(tpl), {"E012"}))
-    c.append(("规则表删来源列", drop_col("| 编号 | 规则（可判真假的陈述） |", "来源")(tpl), {"E012"}))
-    c.append(("失败态列改名", rename_col("| 编号 | 接口 |", "失败态", "异常")(tpl), {"E012", "W008"}))
-    c.append(("规则表加备注列", add_col("| 编号 | 规则（可判真假的陈述） |", "备注")(tpl), {"W008"}))
-    c.append(("规则表整列对调", swap_cols("| 编号 | 规则（可判真假的陈述） |", 0, 1)(tpl), {"W009"}))
-    c.append(("异常表清空数据行", drop_rows(tpl, "| 编号 | 场景 |"), {"E019", "E015"}))
-    c.append(("删掉业务规则整表",
-              tpl.replace(tpl[tpl.index("| 编号 | 规则（可判真假的陈述） |"):tpl.index("## 7. 异常与降级")], ""),
-              {"E002", "E013", "E014", "E015"}))
-    c.append(("移交索引分级不符", tpl.replace("自动化 A4/B2/C1", "自动化 A5/B1/C1"), {"E014"}))
-    c.append(("移交索引写成待补", tpl.replace("自动化 A4/B2/C1", "自动化 待补"), {"W010"}))
-    c.append(("可测项指向不存在编号", set_cell("| 编号 | 对应规则 |", "TST-01", "对应规则", "REQ-99")(tpl), {"E015"}))
-    c.append(("编号写成一位数", set_cell("| 编号 | 规则（可判真假的陈述） |", "REQ-03", "编号", "REQ-3")(tpl), {"E016", "E015"}))
-    c.append(("规则列来源写破折号", set_cell("| 编号 | 规则（可判真假的陈述） |", "REQ-02", "来源", "—")(tpl), {"E003"}))
-    c.append(("接口失败态写破折号", set_cell("| 编号 | 接口 |", "API-02", "失败态", "—")(tpl), {"E005"}))
-    c.append(("未决项责任写待确认", set_cell("| 编号 | 问题 |", "OQ-02", "向谁确认", "待确认")(tpl), {"E006"}))
-    c.append(("用户可见结果写功能正常", set_cell("| 编号 | 场景 |", "EX-01", "用户可见结果", "功能正常")(tpl), {"E007"}))
-    c.append(("非功能数值写很快", set_cell("| 编号 | 指标 |", "NFR-02", "数值", "很快")(tpl), {"E008"}))
-    c.append(("观测点写破折号", set_cell("| 编号 | 对应规则 |", "TST-02", "OBS 观测点", "—")(tpl), {"E009"}))
-    c.append(("分级写 P0", set_cell("| 编号 | 对应 |", "AUTO-03", "级别", "P0")(tpl), {"E010", "E014"}))
-    c.append(("终态写可能", set_cell("| 编号 | 状态 |", "ST-02", "终态", "可能")(tpl), {"E018"}))
-    c.append(("角色必填列留空", set_cell("| 角色 | 能做 |", "运营", "能做", "")(tpl), {"E017"}))
-    c.append(("规则只写八个字", set_cell("| 编号 | 规则（可判真假的陈述） |", "REQ-02", "规则（可判真假的陈述）", "抵扣要正确")(tpl), {"E022"}))
-    c.append(("口头来源不挂 OQ",
-              tpl.replace("[SRC-VERBAL 产品张三 11-26 口述] → OQ-01", "[SRC-VERBAL 产品张三 11-26 口述]"),
-              {"E011"}))
-    c.append(("删掉状态 ST-04 的非法迁移",
-              tpl.replace("| ST-04 | 使用过期券 | 拒绝 | 下单前置校验返回 `code=40902` | [SRC-REQ §4.2] |\n", ""),
-              {"E004"}))
-    c.append(("非目标写成空",
-              tpl.replace("- 不支持多张券叠加使用\n- 不支持跨店铺券\n"
-                          "- 不支持券转赠或退回账户外\n"
-                          "- 不改造 promotion-service 的面额计算引擎，本需求只验消费侧", "（无）"),
+    FP = "| 编号 | 功能点 | 用户可感知的行为 |"
+    TA = "| 编号 | 功能点 | 维度 | 验证意图 |"
+    EVD = "| 编号 | 支撑对象 | 来源类型 | 位置 |"
+    OQ = "| 编号 | 问题 | 影响对象 |"
+
+    gap_block = tpl[tpl.index("**证据缺口**"):tpl.index("## 4 待澄清")]
+    seg4 = tpl[tpl.index("## 4 待澄清"):tpl.index("## 5 移交索引")]
+    fp05 = "| FP-05 | 第三方 Token 校验 | 第三方持 token 调用校验接口，得到有效 / 无效结论 | P1 | [SRC-DOC] 接入文档 §4 |"
+    evd06 = ("| EVD-06 | OQ-01 | SRC-VERBAL | 11-25 需求评审录音 12:30 | "
+             "「锁定先按账号做，IP 那块后面再说」 → OQ-01 | 弱 |")
+    evd07 = ("| EVD-07 | FP-04、TA-11 | SRC-API | auth.yaml#/components/schemas/TokenPair | "
+             "`access_token: {expires_in: 7200}` / `refresh_token: {expires_in: 604800}` | 强 |")
+
+    # ---- 结构类
+    c.append(("删掉第 5 段（移交索引）", tpl[: tpl.index("## 5 移交索引")], {"E001"}))
+    c.append(("第 4 段整段留空", tpl.replace(seg4, "## 4 待澄清\n\n"),
+              {"E002", "E013", "E015", "E014"}))
+    c.append(("分析表删维度列", drop_col(TA, "维度")(tpl), {"E012"}))
+    c.append(("证据表删原文摘录列", drop_col(EVD, "原文摘录")(tpl), {"E012"}))
+    c.append(("证据表列改名", rename_col(EVD, "原文摘录", "说明")(tpl), {"E012", "W008"}))
+    c.append(("证据表多一个备注列", add_col(EVD, "备注")(tpl), {"W008"}))
+    c.append(("分析表把观测点列移到最后", move_col(TA, "观测点")(tpl), {"W009"}))
+    c.append(("删掉证据缺口小节", tpl.replace(gap_block, ""), {"E013"}))
+    c.append(("本期不做没有列表项",
+              tpl.replace("- 不接第三方 OAuth / 企业微信扫码登录\n"
+                          "- 不做多因子认证（MFA）\n"
+                          "- 不做单点登录（SSO）\n", ""),
               {"E020"}))
-    c.append(("编号重复占号",
-              tpl.replace("| REQ-03 | LOCKED 状态超过 30 分钟未支付，自动回到 UNUSED | [SRC-REQ §4.3] |",
-                          "| REQ-03 | LOCKED 状态超过 30 分钟未支付，自动回到 UNUSED | [SRC-REQ §4.3] |\n"
-                          "| REQ-03 | 同一编号被重复使用一次 | [SRC-REQ §4.3] |"),
-              {"W004", "E014"}))
-    c.append(("判 C 不写复核条件",
-              set_cell("| 编号 | 对应 |", "AUTO-07", "复核条件", "—")(tpl), {"E021"}))
+    c.append(("待澄清表清空数据行", drop_rows(tpl, OQ), {"E019", "E015", "E014"}))
+    c.append(("第 3 段声明为空", tpl.replace(gap_block, "已核对，无此类要素。\n\n"), {"W007"}))
+    c.append(("段名改成测试设计", tpl.replace("## 2 需求用例分析", "## 2 测试设计"), {"W006"}))
     c.append(("去掉基线行",
-              tpl.replace("> **基线**：`main@7f3a9c2`（2026-11-25 拉取）\n", ""), {"W003"}))
-    c.append(("段名改成功能描述", tpl.replace("## 6. 业务规则", "## 6. 功能描述"), {"W006"}))
-    c.append(("可测项多于分级项",
-              tpl.replace("| TST-07 | NFR-01 | 网关 P95 指标 | 压测脚本 50 QPS | 需独立压测环境与稳定流量 | 持续 5 分钟 |",
-                          "| TST-07 | NFR-01 | 网关 P95 指标 | 压测脚本 50 QPS | 需独立压测环境与稳定流量 | 持续 5 分钟 |\n"
-                          "| TST-08 | REQ-06 | `GET /coupons` 返回列表 | 造过期券，秒级 | 真实服务 | 无 |"),
-              {"W005"}))
-    c.append(("单表超过 40 行",
-              tpl.replace("| 支付网关 | 支付成功回调 | 沙箱 | [SRC-DOC §5.2] |\n",
-                          "| 支付网关 | 支付成功回调 | 沙箱 | [SRC-DOC §5.2] |\n"
-                          + "".join(f"| extra-{n} | 用途 {n} | 真实服务 | [SRC-DOC §3] |\n" for n in range(1, 42))),
-              {"W001"}))
+              tpl.replace("> **基线**：`{仓库}` `{分支}` @ `{commit}`（{拉取日期}）\n", ""),
+              {"W003"}))
 
-    # 未决项 11 条（同步改索引，避免 E014 掩盖 W002）
-    extra_oq = "".join(f"| OQ-{n:02d} | 验证用未决项 {n} | 产品 张三 | 无 | （待答复） | 未裁决 |\n"
-                       for n in range(6, 12))
-    t = tpl.replace("| OQ-05 | 运营账号同时有发放与作废权限", extra_oq + "| OQ-05 | 运营账号同时有发放与作废权限")
-    c.append(("未决项超过 10 条", t.replace("5 个未决（1 已裁决）", "11 个未决（1 已裁决）"), {"W002"}))
+    # ---- 编号与引用
+    c.append(("功能点指向不存在编号", set_cell(TA, "TA-01", "功能点", "FP-99")(tpl), {"E015"}))
+    c.append(("证据编号写成一位数", set_cell(EVD, "EVD-05", "编号", "EVD-5")(tpl), {"E016"}))
+    c.append(("证据编号重复占号", tpl.replace(evd07, evd07 + "\n" + evd07), {"W004", "E014"}))
+    c.append(("证据支撑对象写字母", set_cell(EVD, "EVD-06", "支撑对象", "看 OQ-01")(tpl), {"E016"}))
 
-    # 第 8 段声明为空
-    seg8 = tpl[tpl.index("## 8. 非功能约束"):tpl.index("## 9. 可测性评估")]
-    c.append(("非功能段声明为空",
-              tpl.replace(seg8, "## 8. 非功能约束\n\n"
-                                "已核对，无此类要素：本需求无性能与容量要求，依据 REQ 正文未提任何门限。\n\n"),
-              {"W007", "E015"}))
+    # ---- 单元格内容
+    c.append(("功能点来源写破折号", set_cell(FP, "FP-02", "来源", "—")(tpl), {"E003"}))
+    c.append(("待澄清责任人写待确认", set_cell(OQ, "OQ-02", "向谁确认", "待确认")(tpl), {"E006"}))
+    c.append(("验证意图写功能正常",
+              set_cell(TA, "TA-02", "验证意图", "登录功能正常，不出现异常情况")(tpl), {"E007"}))
+    c.append(("观测点写破折号", set_cell(TA, "TA-02", "观测点", "—")(tpl), {"E009"}))
+    c.append(("证据位置只写文档", set_cell(EVD, "EVD-04", "位置", "文档")(tpl), {"E024"}))
+    c.append(("摘录写详见第几章", set_cell(EVD, "EVD-05", "原文摘录", "详见 PRD 第 2 章")(tpl), {"E025"}))
+    c.append(("关键取值留空", set_cell(TA, "TA-04", "关键取值", "")(tpl), {"E017"}))
+    c.append(("维度写成可能", set_cell(TA, "TA-05", "维度", "可能")(tpl), {"E018"}))
+    c.append(("验证意图只写四个字", set_cell(TA, "TA-08", "验证意图", "锁定生效")(tpl), {"E022"}))
+    c.append(("自动化写 P0", set_cell(TA, "TA-03", "自动化", "P0")(tpl), {"E010", "E014"}))
+    c.append(("判 C 不写复核条件", set_cell(TA, "TA-14", "复核条件", "—")(tpl), {"E021"}))
+    c.append(("口头来源整行不挂待澄清",
+              tpl.replace(evd06,
+                          "| EVD-06 | FP-02 | SRC-VERBAL | 11-25 需求评审录音 12:30 | "
+                          "「锁定先按账号做，IP 那块后面再说」 | 弱 |"),
+              {"E011"}))
+
+    # ---- 跨表约束
+    fp06 = "| FP-06 | 找回密码 | 通过邮箱重置密码后可用新密码登录 | P2 | [SRC-REQ] PRD §5.1 |"
+    c.append(("新增功能点无分析无证据", tpl.replace(fp05, fp06 + "\n" + fp05),
+              {"E023", "E026", "E014"}))
+    ta15 = ("| TA-15 | FP-06 | 正常流 | 邮箱链接 30 分钟内有效 → 可重置密码 | 有效期 30min | "
+            "重置接口响应 code | A | — | [SRC-REQ] PRD §5.1 |")
+    ta14 = [ln for ln in tpl.splitlines() if ln.startswith("| TA-14 |")][0]
+    c.append(("新增功能点无证据但有分析",
+              tpl.replace(fp05, fp06 + "\n" + fp05).replace(ta14, ta14 + "\n" + ta15),
+              {"E026", "W011", "E014"}))
+    c.append(("全部分析写成正常流", set_col(TA, "维度", "正常流")(tpl), {"W012"}))
+    c.append(("强证据全部降级", set_col(EVD, "强度", "中")(tpl), {"W013"}))
+
+    # ---- 移交索引
+    c.append(("索引分级与实际不符",
+              tpl.replace("自动化 A10/B3/C1", "自动化 A11/B2/C1"), {"E014"}))
+    c.append(("索引功能点数写成中文",
+              tpl.replace("5 个功能点", "五个功能点"), {"W010"}))
+
+    # ---- 规模类
+    extra_evd = "".join(
+        f"| EVD-{n:02d} | FP-01 | SRC-REQ | PRD §9.{n} | 「补录证据第 {n} 条内容」 | 强 |\n"
+        for n in range(8, 43))
+    c.append(("证据表超过 40 行", tpl.replace(evd07, evd07 + "\n" + extra_evd.strip()),
+              {"W001", "E014"}))
+
+    extra_oq = "".join(
+        f"| OQ-{n:02d} | 验证用待澄清第 {n} 条问题？ | FP-01 | 产品-张 | 按当前实现为准 | "
+        f"对应分析项需重写期望值 | 未裁决 |\n"
+        for n in range(4, 12))
+    c.append(("待澄清超过 10 条",
+              tpl.replace("| OQ-03 | refresh token 是否随刷新轮换？",
+                          extra_oq + "| OQ-03 | refresh token 是否随刷新轮换？"),
+              {"W002", "E014"}))
 
     return c
 
@@ -251,14 +332,20 @@ def schema_cases() -> list[tuple[str, dict]]:
         return d
 
     return [
-        ("删掉第 7 段", m(lambda d: d["sections"].pop(6))),
-        ("列角色写错", m(lambda d: d["sections"][5]["blocks"][0]["columns"][1].update(role="date"))),
-        ("枚举缺 values", m(lambda d: d["sections"][2]["blocks"][0]["columns"][3].pop("values"))),
-        ("引用未定义约束", m(lambda d: d["sections"][8].setdefault("constraints", []).append("no_such"))),
-        ("表格缺 columns", m(lambda d: d["sections"][1]["blocks"][0].pop("columns"))),
-        ("id_prefix 无 id 列", m(lambda d: d["sections"][1]["blocks"][0].update(id_prefix="XX"))),
-        ("代码块缺 must_contain", m(lambda d: d["sections"][11]["blocks"][2].update(must_contain=[]))),
+        ("删掉第 4 段", m(lambda d: d["sections"].pop(3))),
         ("段号重复", m(lambda d: d["sections"][3].update(no=3))),
+        ("段 key 重复", m(lambda d: d["sections"][1].update(key="fp"))),
+        ("列角色写错", m(lambda d: d["sections"][1]["blocks"][0]["columns"][2].update(role="date"))),
+        ("枚举缺 values", m(lambda d: d["sections"][1]["blocks"][0]["columns"][2].pop("values"))),
+        ("引用未定义约束", m(lambda d: d["sections"][0].setdefault("constraints", []).append("no_such"))),
+        ("顶层声明未实现的约束",
+         m(lambda d: d["constraints"].append({"name": "no_such_constraint", "on": ["fp"]}))),
+        ("约束指向不存在的段 key",
+         m(lambda d: d["constraints"].append({"name": "fp_has_analysis", "on": ["nope"]}))),
+        ("表格缺 columns", m(lambda d: d["sections"][1]["blocks"][0].pop("columns"))),
+        ("id_prefix 但无 id 列",
+         m(lambda d: d["sections"][2]["blocks"][0]["columns"][0].update(role="text"))),
+        ("代码块缺 must_contain", m(lambda d: d["sections"][4]["blocks"][0].update(must_contain=[]))),
     ]
 
 

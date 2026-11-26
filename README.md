@@ -31,7 +31,7 @@
 | Skill | 解决什么 | 触发词 | 版本 |
 |---|---|---|---|
 | [c2d-case-writing](./skills/c2d-case-writing/README.md) | C2D（设计稿转代码）图片校验用例：每条强制挂真实图片直链，并声明这张图为何能触发该规则 | C2D 图片校验、MasterGo 图片导出 | `v0.1.0` |
-| [requirement-analysis](./skills/requirement-analysis/README.md) | 需求建模：十二段模型 + 可测性四问 + 自动化 A/B/C 分级，每条结论强制带来源；输出结构由 schema 定义，下游可直接解析 | 需求分析、需求建模、可测性评估、能否自动化 | `v0.2.0` |
+| [requirement-analysis](./skills/requirement-analysis/README.md) | 需求分析：功能点 + 需求用例分析 + 证据 + 待澄清四块产物，每条结论落到原文位置与原句；输出结构由 schema 定义，下游可直接解析 | 需求分析、需求评审、需求澄清、这个需求怎么测 | `v0.3.0` |
 
 规划中（还没写，不列进上表）：测试策略、用例审查、接口契约测试、flaky 治理。
 

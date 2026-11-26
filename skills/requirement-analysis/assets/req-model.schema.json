@@ -1,8 +1,9 @@
 {
-  "schema": "requirement-model",
-  "version": "1.0",
+  "schema": "requirement-test-analysis",
+  "version": "2.0",
   "kind": "markdown-table-contract",
-  "note": "本文件不是 JSON Schema，也不是任何标准格式。它是「需求模型.md」这份 Markdown 产出的结构契约：定义十二段的顺序、每段由哪些块组成、每个表格必须有哪些列、每列承担什么语义。唯一消费者是 scripts/req_lint.py，只支持下面实际用到的关键字，未列出的关键字会被忽略。之所以自定义而不套 JSON Schema：产出是人在写的 Markdown 表格，JSON Schema 无法表达「列必须叫这个名、值必须在同一行」这类约束。",
+  "artifact": "需求测试分析.md",
+  "note": "本文件不是 JSON Schema，也不是任何标准格式。它是「需求测试分析.md」这份 Markdown 产出的结构契约：定义四块产物的顺序、每段由哪些块组成、每个表格必须有哪些列、每列承担什么语义、以及跨表必须成立的约束。唯一消费者是 scripts/req_lint.py，只支持下面实际用到的关键字。之所以自定义而不套 JSON Schema：产出是人在写的 Markdown 表格，JSON Schema 无法表达「列必须叫这个名、值必须在同一行」这类约束。",
   "consumed_by": "scripts/req_lint.py",
   "roles": {
     "id": "条目编号。必须匹配 <前缀>-<两位以上序号>，全区唯一，不回收。前缀由所属块的 id_prefix 指定",
@@ -10,8 +11,10 @@
     "text": "自由文本但必须可判定。不得为空，不得出现不可判定表述（功能正常 / 符合预期 …）",
     "enum": "枚举。值必须属于 column.values",
     "number": "必须含数字。用来拦住「响应快」这类无数值表述",
-    "ref": "指向另一个条目的编号。指向不存在的编号会报错；前缀由 column.ref_prefix 限定",
+    "ref": "指向另一个条目的编号，支持一行多个（用 、 / , 分隔），逐个校验存在性与前缀",
     "person": "责任人。不得为空，也不得写「待确认 / TBD / ?」这类占位",
+    "locator": "定位。必须能落到具体处所：文件:行、章节号、接口 METHOD /path、配置键。不接受「PRD」「文档」「代码」这类只有载体没有位置的写法",
+    "quote": "原文摘录。必须是可核对的原句片段；写「详见」「同上」「参见第 X 章」不算摘录，因为下游无法据它判真假",
     "any": "不校验内容，只检查非空（若 required）"
   },
   "frontmatter": {
@@ -21,50 +24,59 @@
   "sections": [
     {
       "no": 1,
-      "key": "goals",
-      "title": "目标与非目标",
-      "title_keywords": ["目标"],
-      "why": "没有非目标，范围会无限膨胀；没有可量化成功标准，验收会变成主观判断",
+      "key": "fp",
+      "title": "功能点",
+      "title_keywords": ["功能点"],
+      "why": "功能点是需求的最小可分配单位，也是证据与分析项的挂载点。没有它，证据无处可挂、覆盖率无法计算",
       "blocks": [
         {
-          "type": "prose",
-          "name": "目标",
+          "type": "table",
+          "name": "功能点清单",
           "required": true,
-          "must_contain": ["目标"]
+          "identify_by": ["功能点", "优先级"],
+          "id_prefix": "FP",
+          "min_rows": 1,
+          "columns": [
+            { "name": "编号", "role": "id", "required": true },
+            { "name": "功能点", "role": "text", "required": true, "min_len": 4, "note": "动词短语，如「账密登录」「锁定后解锁」。写成「登录相关」这类名词块无法判断粒度" },
+            { "name": "用户可感知的行为", "role": "text", "required": true, "min_len": 8, "note": "从用户视角写「做什么 → 看到什么」。写内部实现的功能点，断言只能落在代码上，无法验收" },
+            { "name": "优先级", "role": "enum", "required": true, "values": ["P0", "P1", "P2"] },
+            { "name": "来源", "role": "source", "required": true }
+          ]
         },
         {
           "type": "prose",
-          "name": "成功标准",
+          "name": "本期不做",
           "required": true,
-          "must_contain": ["成功标准"],
-          "min_list_items": 1
-        },
-        {
-          "type": "prose",
-          "name": "非目标",
-          "required": true,
-          "must_contain": ["非目标"],
-          "min_list_items": 1
+          "must_contain": ["不做"],
+          "min_list_items": 1,
+          "note": "功能点的补集。不写边界，范围会在联调期被逐条追加"
         }
       ]
     },
     {
       "no": 2,
-      "key": "roles",
-      "title": "角色与权限",
-      "title_keywords": ["角色"],
-      "why": "权限矩阵缺失时，越权路径会在联调或线上才被发现，而那时代价最高",
+      "key": "analysis",
+      "title": "需求用例分析",
+      "title_keywords": ["分析"],
+      "why": "本段是产物主体。它回答「要验什么」，不回答「怎么操作」——步骤与数据属于下游用例 skill。只写正常流等于没分析，真正暴露缺陷的是异常、边界、状态与权限",
       "blocks": [
         {
           "type": "table",
-          "name": "角色权限矩阵",
+          "name": "分析项",
           "required": true,
+          "identify_by": ["验证意图", "维度"],
+          "id_prefix": "TA",
           "min_rows": 1,
           "columns": [
-            { "name": "角色", "role": "text", "required": true },
-            { "name": "能做", "role": "text", "required": true },
-            { "name": "不能做", "role": "text", "required": true, "note": "只写能做等于没写边界；不能做是越权用例的唯一来源" },
-            { "name": "可见范围", "role": "text", "required": true },
+            { "name": "编号", "role": "id", "required": true },
+            { "name": "功能点", "role": "ref", "required": true, "ref_prefix": ["FP"], "note": "分析项必须挂到具体功能点，否则无法算覆盖率" },
+            { "name": "维度", "tag": "dimension", "role": "enum", "required": true, "values": ["正常流", "边界", "异常", "状态", "权限", "并发", "幂等", "时序", "数据一致性", "兼容", "性能"], "note": "维度决定这条分析在找哪类缺陷。同一功能点的多条分析应落在不同维度上" },
+            { "name": "验证意图", "role": "text", "required": true, "min_len": 12, "note": "写成「输入/前置 X → 期望 Y」。这是断言意图，不是步骤；出现点击、输入框、页面跳转这类操作描述说明写成了用例" },
+            { "name": "关键取值", "role": "text", "required": true, "note": "决定结论的取值或阈值，如「错误次数 4/5」「长度 8/20/21」。只写「各种情况」等于没写" },
+            { "name": "观测点", "role": "text", "required": true, "empty_code": "E009", "note": "具体到接口字段 / DB 字段 / 日志 / 埋点，不能只写「接口」「页面」" },
+            { "name": "自动化", "tag": "automation", "role": "enum", "required": true, "values": ["A", "B", "C"], "invalid_code": "E010" },
+            { "name": "复核条件", "tag": "review_condition", "role": "any", "required": false, "note": "判 C 时必须写；不写就变成「以后再说」" },
             { "name": "来源", "role": "source", "required": true }
           ]
         }
@@ -72,302 +84,121 @@
     },
     {
       "no": 3,
-      "key": "states",
-      "title": "状态与迁移",
-      "title_keywords": ["状态"],
-      "why": "合法迁移写得再全，也只是把正常流程复述一遍；真正暴露缺陷的是非法迁移被拦截的方式",
+      "key": "evidence",
+      "title": "证据",
+      "title_keywords": ["证据"],
+      "why": "证据是本 skill 与「凭印象写测试点」的分界线。一条结论要么能指到原文的哪一句，要么就该降级为待澄清；两者都不做，等于让人相信分析者的记忆",
       "blocks": [
         {
           "type": "table",
-          "name": "状态清单",
+          "name": "证据台账",
           "required": true,
-          "identify_by": ["状态", "终态"],
-          "id_prefix": "ST",
+          "identify_by": ["位置", "原文摘录"],
+          "id_prefix": "EVD",
           "min_rows": 1,
           "columns": [
             { "name": "编号", "role": "id", "required": true },
-            { "name": "状态", "role": "text", "required": true },
-            { "name": "含义", "role": "text", "required": true },
-            { "name": "终态", "role": "enum", "required": true, "values": ["是", "否"] },
-            { "name": "来源", "role": "source", "required": true }
-          ]
-        },
-        {
-          "type": "table",
-          "name": "合法迁移",
-          "required": true,
-          "identify_by": ["从", "到"],
-          "min_rows": 1,
-          "columns": [
-            { "name": "从", "role": "ref", "required": true, "ref_prefix": ["ST"] },
-            { "name": "事件", "role": "text", "required": true },
-            { "name": "到", "role": "ref", "required": true, "ref_prefix": ["ST"] },
-            { "name": "来源", "role": "source", "required": true }
-          ]
-        },
-        {
-          "type": "table",
-          "name": "非法迁移",
-          "required": true,
-          "identify_by": ["拦截方式"],
-          "min_rows": 1,
-          "columns": [
-            { "name": "从", "role": "ref", "required": true, "ref_prefix": ["ST"] },
-            { "name": "尝试", "role": "text", "required": true },
-            { "name": "期望", "role": "text", "required": true },
-            { "name": "拦截方式", "role": "text", "required": true, "note": "只写「拒绝」不构成拦截方式，要写清靠什么拦住、返回什么" },
-            { "name": "来源", "role": "source", "required": true }
-          ]
-        }
-      ],
-      "constraints": ["illegal_transition_per_state"]
-    },
-    {
-      "no": 4,
-      "key": "data",
-      "title": "数据契约",
-      "title_keywords": ["数据", "字段"],
-      "why": "边界与校验时机不写，字段级用例就只能测「必填没填」这一种",
-      "blocks": [
-        {
-          "type": "table",
-          "name": "字段表",
-          "required": true,
-          "id_prefix": "FLD",
-          "min_rows": 1,
-          "columns": [
-            { "name": "编号", "role": "id", "required": true },
-            { "name": "字段", "role": "text", "required": true },
-            { "name": "类型", "role": "text", "required": true },
-            { "name": "必填", "role": "enum", "required": true, "values": ["是", "否", "条件"] },
-            { "name": "边界", "role": "text", "required": true },
-            { "name": "来源", "role": "source", "required": true },
-            { "name": "校验时机", "role": "text", "required": true }
+            { "name": "支撑对象", "role": "ref", "required": true, "ref_prefix": ["FP", "TA", "OQ"], "note": "一条证据可以同时支撑多条结论，用、分隔。指不到对象的证据是无效证据" },
+            { "name": "来源类型", "role": "enum", "required": true, "values": ["SRC-API", "SRC-CODE", "SRC-DOC", "SRC-REQ", "SRC-TICKET", "SRC-VERBAL"], "note": "与强度列联动：口头来源只能是弱证据" },
+            { "name": "位置", "role": "locator", "required": true, "note": "文件:行 / PRD §2.1 / GET /api/login / user.locked_until" },
+            { "name": "原文摘录", "role": "quote", "required": true, "note": "原句或代码片段，可被第三人独立核对。转述不是证据" },
+            { "name": "强度", "tag": "strength", "role": "enum", "required": true, "values": ["强", "中", "弱"], "note": "强 = 接口定义或代码实测；中 = 需求文档或设计文档；弱 = 口头、推断、缺陷单" }
           ]
         },
         {
           "type": "prose",
-          "name": "缺失值语义",
+          "name": "证据缺口",
           "required": true,
-          "must_contain": ["缺失值"],
-          "note": "不传 / 传 null / 传非法值 的三种行为必须区分，否则「不传」会被当成「传了空」"
+          "must_contain": ["缺口"],
+          "note": "必须点名哪些功能点或分析项只有弱证据、哪些完全没有。写「无缺口」也必须给依据"
+        }
+      ]
+    },
+    {
+      "no": 4,
+      "key": "oq",
+      "title": "待澄清",
+      "title_keywords": ["澄清"],
+      "why": "「待确认」不是责任人。没有人的待确认项会在三个月后仍然挂着，而下游已经按假设开工。必须写清「我的假设」与「若不成立的后果」，让对方能一句话回答",
+      "blocks": [
+        {
+          "type": "table",
+          "name": "待澄清项",
+          "required": true,
+          "identify_by": ["向谁确认", "当前假设"],
+          "id_prefix": "OQ",
+          "min_rows": 1,
+          "columns": [
+            { "name": "编号", "role": "id", "required": true },
+            { "name": "问题", "role": "text", "required": true, "min_len": 8, "note": "必须是一个能用是/否或一个值回答的问题，不是一段背景描述" },
+            { "name": "影响对象", "role": "ref", "required": true, "ref_prefix": ["FP", "TA"], "note": "答错会导致哪些结论失效。指不到任何结论的问题不值得问" },
+            { "name": "向谁确认", "role": "person", "required": true, "empty_code": "E006" },
+            { "name": "当前假设", "role": "text", "required": true, "note": "没有假设就无法在拿不到答复时继续。写「暂无」等于放弃推进" },
+            { "name": "若不成立的后果", "role": "text", "required": true, "min_len": 8, "note": "让需求方判断值不值得回答这个问题的唯一依据" },
+            { "name": "状态", "tag": "oq_status", "role": "enum", "required": true, "values": ["已裁决", "未裁决", "阻塞"] }
+          ]
         }
       ]
     },
     {
       "no": 5,
-      "key": "interfaces",
-      "title": "接口与依赖",
-      "title_keywords": ["接口"],
-      "why": "只写成功态是需求分析最常见也最贵的漏项，错误码与幂等语义都在失败态里",
+      "key": "handover",
+      "title": "移交索引",
+      "title_keywords": ["移交"],
+      "why": "下游只读这一行决定要不要读全文。手写的数字不会随正文自动更新，写错就是发假数据",
       "blocks": [
-        {
-          "type": "table",
-          "name": "接口表",
-          "required": true,
-          "id_prefix": "API",
-          "min_rows": 1,
-          "columns": [
-            { "name": "编号", "role": "id", "required": true },
-            { "name": "接口", "role": "text", "required": true },
-            { "name": "成功态", "role": "text", "required": true },
-            { "name": "失败态", "role": "text", "required": true, "empty_code": "E005", "note": "至少一条错误码或明确拒绝条件" },
-            { "name": "超时", "role": "any", "required": false },
-            { "name": "重试", "role": "any", "required": false },
-            { "name": "幂等", "role": "any", "required": false },
-            { "name": "来源", "role": "source", "required": true }
-          ]
-        },
-        {
-          "type": "table",
-          "name": "外部依赖",
-          "required": true,
-          "identify_by": ["依赖", "测试环境形态"],
-          "min_rows": 1,
-          "columns": [
-            { "name": "依赖", "role": "text", "required": true },
-            { "name": "用途", "role": "text", "required": true },
-            { "name": "测试环境形态", "role": "text", "required": true, "note": "真实服务 / 挡板 / 沙箱 —— 这一列决定用例能不能跑" },
-            { "name": "来源", "role": "source", "required": true }
-          ]
-        }
-      ]
-    },
-    {
-      "no": 6,
-      "key": "rules",
-      "title": "业务规则",
-      "title_keywords": ["规则"],
-      "why": "规则必须是能判真假的陈述。「合理处理」「友好提示」不是规则，是愿望",
-      "blocks": [
-        {
-          "type": "table",
-          "name": "规则表",
-          "required": true,
-          "id_prefix": "REQ",
-          "min_rows": 1,
-          "columns": [
-            { "name": "编号", "role": "id", "required": true },
-            { "name": "规则", "role": "text", "required": true, "min_len": 10 },
-            { "name": "来源", "role": "source", "required": true }
-          ]
-        }
-      ]
-    },
-    {
-      "no": 7,
-      "key": "exceptions",
-      "title": "异常与降级",
-      "title_keywords": ["异常"],
-      "why": "异常必须写到「系统行为 + 用户可见结果」两层。只写系统行为，用户视角的断言就写不出来",
-      "blocks": [
-        {
-          "type": "table",
-          "name": "异常表",
-          "required": true,
-          "id_prefix": "EX",
-          "min_rows": 1,
-          "columns": [
-            { "name": "编号", "role": "id", "required": true },
-            { "name": "场景", "role": "text", "required": true },
-            { "name": "系统行为", "role": "text", "required": true },
-            { "name": "用户可见结果", "role": "text", "required": true },
-            { "name": "来源", "role": "source", "required": true }
-          ]
-        }
-      ]
-    },
-    {
-      "no": 8,
-      "key": "nfr",
-      "title": "非功能约束",
-      "title_keywords": ["非功能"],
-      "why": "无数值的非功能约束，执行阶段一定会有人临时编一个阈值",
-      "blocks": [
-        {
-          "type": "table",
-          "name": "非功能表",
-          "required": true,
-          "id_prefix": "NFR",
-          "min_rows": 1,
-          "columns": [
-            { "name": "编号", "role": "id", "required": true },
-            { "name": "指标", "role": "text", "required": true },
-            { "name": "数值", "role": "number", "required": true, "empty_code": "E008" },
-            { "name": "测量方法", "role": "text", "required": true, "note": "同样的数值，不同测法结论不同；不写测法等于没有验收口径" },
-            { "name": "来源", "role": "source", "required": true }
-          ]
-        }
-      ]
-    },
-    {
-      "no": 9,
-      "key": "testability",
-      "title": "可测性评估",
-      "title_keywords": ["可测"],
-      "why": "本段是与「泛需求建模」的分界线。写不出观测点的规则，在当前架构下就是不可验证的规则",
-      "blocks": [
-        {
-          "type": "table",
-          "name": "可测性表",
-          "required": true,
-          "id_prefix": "TST",
-          "min_rows": 1,
-          "columns": [
-            { "name": "编号", "role": "id", "required": true },
-            { "name": "对应规则", "role": "ref", "required": true, "ref_prefix": ["REQ", "EX", "NFR"], "note": "可测项必须挂到具体条目，否则不知道测的是哪条规则" },
-            { "name": "OBS", "role": "text", "required": true, "empty_code": "E009", "note": "具体到接口响应 / DB 字段 / 日志 / 埋点，不能只写「接口」" },
-            { "name": "CTRL", "role": "text", "required": true, "note": "前置状态怎么造、造一次多久" },
-            { "name": "ENV", "role": "text", "required": true },
-            { "name": "TIME", "role": "text", "required": true }
-          ]
-        }
-      ]
-    },
-    {
-      "no": 10,
-      "key": "automation",
-      "title": "自动化分级",
-      "title_keywords": ["自动化"],
-      "why": "先判能否机判、再判能否常驻。反过来判会把不稳定用例全塞进 A，三个月后流水线全红",
-      "blocks": [
-        {
-          "type": "table",
-          "name": "分级表",
-          "required": true,
-          "id_prefix": "AUTO",
-          "min_rows": 1,
-          "columns": [
-            { "name": "编号", "role": "id", "required": true },
-            { "name": "对应", "role": "ref", "required": true, "ref_prefix": ["REQ", "EX", "NFR"] },
-            { "name": "级别", "role": "enum", "required": true, "values": ["A", "B", "C"], "invalid_code": "E010" },
-            { "name": "理由", "role": "text", "required": true },
-            { "name": "成本", "role": "any", "required": false },
-            { "name": "复核条件", "role": "any", "required": false, "note": "判 C 时必须写；不写就变成「以后再说」" }
-          ]
-        }
-      ],
-      "constraints": ["c_requires_review_condition"]
-    },
-    {
-      "no": 11,
-      "key": "open-questions",
-      "title": "未决项",
-      "title_keywords": ["未决"],
-      "why": "「待确认」不是责任人。没有人的待确认项，会在三个月后仍然挂着，而下游已经按假设开工了",
-      "blocks": [
-        {
-          "type": "table",
-          "name": "未决项表",
-          "required": true,
-          "id_prefix": "OQ",
-          "min_rows": 1,
-          "columns": [
-            { "name": "编号", "role": "id", "required": true },
-            { "name": "问题", "role": "text", "required": true },
-            { "name": "向谁确认", "role": "person", "required": true, "empty_code": "E006" },
-            { "name": "影响", "role": "text", "required": true },
-            { "name": "裁决", "role": "any", "required": false },
-            { "name": "状态", "role": "enum", "required": true, "values": ["已裁决", "未裁决", "阻塞"] }
-          ]
-        }
-      ]
-    },
-    {
-      "no": 12,
-      "key": "boundary",
-      "title": "验证边界与移交",
-      "title_keywords": ["边界", "移交"],
-      "why": "只写验什么，评审无法判断是否漏测；移交索引是下游唯一会读的一行，写错就是发假数据",
-      "blocks": [
-        {
-          "type": "prose",
-          "name": "本期验",
-          "required": true,
-          "must_contain": ["验"],
-          "min_list_items": 1
-        },
-        {
-          "type": "prose",
-          "name": "不验范围",
-          "required": true,
-          "must_contain": ["不验"],
-          "min_list_items": 1
-        },
         {
           "type": "code",
           "name": "移交索引",
           "required": true,
-          "must_contain": ["条规则", "自动化"],
-          "format": "需求模型.md · {N} 条规则 · {M} 个未决（{K} 已裁决）· 自动化 A{a}/B{b}/C{c} · 基线 {branch}@{commit}"
+          "must_contain": ["个功能点", "条分析", "条证据"],
+          "format": "需求测试分析.md · {F} 个功能点 · {T} 条分析 · {E} 条证据 · {O} 个待澄清（{K} 已裁决）· 自动化 A{a}/B{b}/C{c} · 基线 {branch}@{commit}"
         }
-      ],
-      "constraints": ["handover_index_consistency"]
+      ]
     }
   ],
-  "constraints": {
-    "illegal_transition_per_state": "第 3 段：状态清单里的每个 ST-* 都必须在非法迁移表的「从」列出现至少一次",
-    "c_requires_review_condition": "第 10 段：级别为 C 的行，复核条件不得为空。B 级不强制（模板里写了更好）",
-    "handover_index_consistency": "第 12 段：移交索引里的规则数 / 未决数 / 已裁决数 / A·B·C 计数，必须与实际条目一致"
-  }
+  "constraints": [
+    {
+      "name": "fp_has_analysis",
+      "on": ["fp", "analysis"],
+      "level": "E",
+      "desc": "每个功能点至少一条分析项。没有分析的功能点等于没排进测试计划"
+    },
+    {
+      "name": "every_fp_has_evidence",
+      "on": ["fp", "evidence"],
+      "level": "E",
+      "desc": "每个功能点至少被一条证据支撑。证据是本产物的立身之本，缺了就不是分析而是猜测"
+    },
+    {
+      "name": "every_ta_has_evidence",
+      "on": ["analysis", "evidence"],
+      "level": "W",
+      "desc": "每条分析项都应有证据支撑。分析项若共享功能点证据可豁免，因此降为警告"
+    },
+    {
+      "name": "c_requires_review_condition",
+      "on": ["analysis"],
+      "level": "E",
+      "desc": "自动化判 C 的行，复核条件不得为空。B 级不强制"
+    },
+    {
+      "name": "normal_flow_only",
+      "on": ["analysis"],
+      "level": "W",
+      "desc": "全部分析项的维度都是正常流，说明没有做异常与边界分析"
+    },
+    {
+      "name": "weak_evidence_dominance",
+      "on": ["evidence"],
+      "level": "W",
+      "desc": "强证据占比低于 30%，结论主要建立在文档转述或口头上"
+    },
+    {
+      "name": "handover_index_consistency",
+      "on": ["handover"],
+      "level": "E",
+      "desc": "移交索引里的功能点数 / 分析数 / 证据数 / 待澄清数 / 已裁决数 / A·B·C 计数必须与实际条目一致"
+    }
+  ]
 }
