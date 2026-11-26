@@ -40,6 +40,8 @@ REF_RE = re.compile(
 MAX_SKILL_LINES = 500
 MIN_DESC_LEN = 40
 TEXT_SUFFIXES = {".md", ".py", ".sh", ".json", ".yaml", ".yml", ".txt", ".js"}
+README = ROOT / "README.md"
+BADGE_COUNT_RE = re.compile(r"shields\.io/badge/skills-(\d+)-")
 
 
 def parse_frontmatter(text: str):
@@ -163,6 +165,27 @@ def check_skill(skill_dir: Path):
     return errors, warnings
 
 
+def check_repo_level(skill_names: list[str]):
+    """仓库首页是索引：新增 skill 忘了同步，首页就会悄悄过期。只告警，不阻断。"""
+    warnings: list[tuple[str, str]] = []
+    if not README.is_file():
+        return [("W004", "根目录缺 README.md")]
+
+    text = README.read_text(encoding="utf-8", errors="replace")
+    for name in skill_names:
+        if f"skills/{name}" not in text:
+            warnings.append(("W004", f"skill 未出现在 README.md 中（首页索引过期）: {name}"))
+
+    hit = BADGE_COUNT_RE.search(text)
+    if not hit:
+        warnings.append(("W005", "README.md 里找不到 skills-N 徽章"))
+    elif int(hit.group(1)) != len(skill_names):
+        warnings.append(
+            ("W005", f"徽章写的是 skills-{hit.group(1)}，实际有 {len(skill_names)} 个 skill")
+        )
+    return warnings
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="校验 skills/ 下每个 skill 的可加载性")
     ap.add_argument("--skill", help="只检查指定 skill")
@@ -198,8 +221,21 @@ def main() -> int:
             }
         )
 
+    repo_warnings = check_repo_level([d.name for d in skill_dirs])
+    total_w += len(repo_warnings)
+
     if args.json:
-        print(json.dumps({"ok": total_e == 0, "skills": report}, ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                {
+                    "ok": total_e == 0,
+                    "skills": report,
+                    "repo": [{"code": c, "message": m} for c, m in repo_warnings],
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
         return 0 if total_e == 0 else 1
 
     print("xxuntuil-test-skills · 仓库自检")
@@ -213,6 +249,13 @@ def main() -> int:
         for w in item["warnings"]:
             print(f"  ! {w['code']} {w['message']}")
         print()
+
+    print("仓库首页")
+    if not repo_warnings:
+        print("  ✓ 索引与徽章已同步")
+    for c, m in repo_warnings:
+        print(f"  ! {c} {m}")
+    print()
 
     verdict = "通过" if total_e == 0 else "不通过（有 E 级问题）"
     print(f"汇总: E {total_e} · W {total_w} → {verdict}")

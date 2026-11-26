@@ -17,13 +17,16 @@
 
 ```
 skills/<name>/
-  SKILL.md          必需，唯一入口
+  SKILL.md          必需，Agent 读的唯一入口
+  README.md         必需，给人看的详情页（首页只做索引，细节写这里）
   references/       按需加载的规范、清单、矩阵（可选）
   assets/           可直接复制的模板（可选）
   scripts/          可执行闸门（可选）
 ```
 
 `<name>` 必须与 `SKILL.md` frontmatter 的 `name` **完全一致**，小写字母数字加连字符，不超过 40 字符。不一致会静默不加载——这是最高频的失败原因，`check_repo.py` 会拦。
+
+**为什么详情页必须单独存在**：合集首页只放「技能清单 + 合集机制」。单个 skill 的规则明细、示例、图源、实测记录写进它自己的 `README.md`，否则首页会越来越像「只为某一个 skill 而建」，第二个 skill 进来就没地方放了。
 
 ### 2. frontmatter
 
@@ -70,7 +73,7 @@ TODO：向 {谁} 确认 {什么}
 ## 提交前自检
 
 ```bash
-python3 scripts/check_repo.py          # 命名 / 元数据 / 断链 / 本地路径 / 脚本语法
+python3 scripts/check_repo.py          # 命名 / 元数据 / 断链 / 本地路径 / 脚本语法 / 首页同步
 python3 skills/<name>/scripts/*.py     # 自己那两道闸门，用真实样例跑一遍
 ```
 
@@ -81,7 +84,7 @@ CI 与本地跑的是同一个脚本，不会出现「本地过 CI 不过」。
 - 一个提交只做一件事：新增 skill、修某条规则、改某个脚本，分开提
 - 提交信息用中文，首行说明做了什么，正文说明为什么
 - 改了 skill 行为，同步更新 `CHANGELOG.md`
-- 新增 skill 时把 `README.md` 与 `README.en.md` 的技能清单都补上
+- 新增 skill 时，三处要同步：`README.md` 与 `README.en.md` 的技能清单表、`skills-N` 徽章、skill 自己的 `README.md` 详情页（前两处 `check_repo.py` 会告警，但改还得人改）
 
 ## PR
 

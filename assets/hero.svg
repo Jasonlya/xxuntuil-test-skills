@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" role="img" aria-label="C2D Case Writing —— 为设计稿转代码编写图片校验用例的测试 Skill">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" role="img" aria-label="xxuntuil-test-skills —— 面向 AI Agent 的测试 Skill 合集">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0.85" y2="1">
       <stop offset="0" stop-color="#eaf3ff"/>
@@ -23,20 +23,20 @@
   <ellipse cx="1370" cy="560" rx="320" ry="210" fill="#e9d5ff" opacity="0.5" filter="url(#soft)"/>
   <rect width="1600" height="640" fill="url(#dots)"/>
 
-  <text x="800" y="196" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="27" font-weight="600" fill="#1d4ed8">面向 AI Agent 的测试 Skill 合集</text>
+  <text x="800" y="176" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="26" font-weight="600" fill="#1d4ed8">面向 AI Agent 的测试工程</text>
 
-  <text x="800" y="330" text-anchor="middle" font-family="'Helvetica Neue',Inter,system-ui,sans-serif" font-size="94" font-weight="700" fill="url(#title)" letter-spacing="-1">C2D Case Writing</text>
+  <text x="800" y="306" text-anchor="middle" font-family="'Helvetica Neue',Inter,system-ui,sans-serif" font-size="100" font-weight="700" fill="url(#title)" letter-spacing="-2">Test Skills</text>
 
-  <text x="800" y="400" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="36" font-weight="500" fill="#1e293b">每条图片用例都挂真实直链</text>
+  <text x="800" y="368" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="30" font-weight="500" fill="#1e293b">测试 Skill 合集　·　一个目录一个 skill</text>
 
-  <text x="800" y="446" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="23" fill="#64748b">且这张图真的能触发它 —— 图不对，用例等于没写</text>
+  <text x="800" y="418" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="23" fill="#64748b">把测试方法、产出标准与机械闸门，装进你的 Agent</text>
 
-  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="23" font-weight="500" fill="#334155">
-    <rect x="551" y="495" width="172" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
-    <text x="637" y="531" text-anchor="middle">真实图片直链</text>
-    <rect x="747" y="495" width="128" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
-    <text x="811" y="531" text-anchor="middle">机械闸门</text>
-    <rect x="899" y="495" width="150" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
-    <text x="974" y="531" text-anchor="middle">可判定预期</text>
+  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="22" font-weight="500" fill="#334155">
+    <rect x="492" y="474" width="242" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
+    <text x="613" y="510" text-anchor="middle">一个目录一个 skill</text>
+    <rect x="756" y="474" width="154" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
+    <text x="833" y="510" text-anchor="middle">零依赖脚本</text>
+    <rect x="932" y="474" width="176" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
+    <text x="1020" y="510" text-anchor="middle">退出码即判决</text>
   </g>
 </svg>

@@ -2,6 +2,16 @@
 
 本文件记录所有值得注意的变更。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [未发布]
+
+### 变更
+
+- **仓库首页改为合集索引**。横幅从单个 skill 名（C2D Case Writing）换成合集定位（Test Skills），正文不再展开单个 skill 的规则明细、图源表与用例样例——原来的写法让仓库看起来只为那一个 skill 而建。
+- **新增 skill 详情页** `skills/c2d-case-writing/README.md`，承接用例示例、六阶段流程、两道闸门、场景矩阵、图源登记表与本 skill 的实测记录。合集自此是「首页索引 + 每个 skill 一张详情页」的两层结构。
+- **图示重组**：skill 专属图移到 `assets/c2d/`；新增合集级 `assets/anatomy.svg`，讲三层加载与「目录名 = name」约定。
+- **仓库自检新增两条告警**（不阻断）：`W004` skill 未出现在 README 索引中、`W005` `skills-N` 徽章与实际 skill 数量不符。加 skill 忘了同步首页，从这里就能看出来。
+- **徽章调整**：去掉 `version`（版本属于各 skill，不是仓库级概念），保留 CI / skills 数量 / 零依赖 / Python / License。
+
 ## [0.1.0] - 2026-11-26
 
 首个版本。仓库从零建立，收录一个 skill。
