@@ -28,7 +28,9 @@ LOCAL_PATH_RE = re.compile(
     r"(?<![\w.])("
     r"/Users/[A-Za-z0-9._-]+"
     r"|/home/[a-z][A-Za-z0-9._-]*"
-    r"|~/[A-Za-z0-9._-]"
+    # 只拦 ~/ 后跟可见名的个人目录（~/Documents/x），放行 ~/.tool 这类标准配置目录：
+    # ~/.workbuddy/skills 是可移植的安装目标，换个用户照样成立
+    r"|~/[A-Za-z0-9_-]"
     r"|[A-Za-z]:\\\\"
     r")"
 )
