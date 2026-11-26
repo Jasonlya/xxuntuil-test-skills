@@ -16,3 +16,18 @@ jobs:
           python-version: "3.11"
       - name: 仓库自检（命名 / 元数据 / 断链 / 脚本语法）
         run: python3 scripts/check_repo.py
+
+      # 闸门自测：证明闸门「只报该报的」。没有自测脚本的 skill 自动跳过。
+      - name: skill 闸门自测
+        run: |
+          shopt -s nullglob
+          scripts=(skills/*/scripts/selftest_*.py)
+          if [ ${#scripts[@]} -eq 0 ]; then
+            echo "没有找到 selftest_*.py，跳过"
+            exit 0
+          fi
+          for f in "${scripts[@]}"; do
+            echo "::group::$f"
+            python3 "$f"
+            echo "::endgroup::"
+          done
