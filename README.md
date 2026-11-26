@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/Jasonlya/xxuntuil-test-skills/actions/workflows/check.yml"><img src="https://github.com/Jasonlya/xxuntuil-test-skills/actions/workflows/check.yml/badge.svg?branch=main" alt="CI"></a>
-  <a href="./skills/"><img src="https://img.shields.io/badge/skills-1-blue" alt="Skills"></a>
+  <a href="./skills/"><img src="https://img.shields.io/badge/skills-2-blue" alt="Skills"></a>
   <img src="https://img.shields.io/badge/deps-0-brightgreen" alt="零第三方依赖">
   <img src="https://img.shields.io/badge/python-3.8%2B-3776AB" alt="Python 3.8+">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License MIT"></a>
@@ -31,8 +31,9 @@
 | Skill | 解决什么 | 触发词 | 版本 |
 |---|---|---|---|
 | [c2d-case-writing](./skills/c2d-case-writing/README.md) | C2D（设计稿转代码）图片校验用例：每条强制挂真实图片直链，并声明这张图为何能触发该规则 | C2D 图片校验、MasterGo 图片填充 / 导出、设计稿转代码图片测试 | `v0.1.0` |
+| [requirement-analysis](./skills/requirement-analysis/README.md) | 需求建模：十二段模型 + 可测性四问 + 自动化 A/B/C 分级，每条结论强制带来源 | 需求分析、需求建模、PRD 研读、需求评审、可测性评估、这个需求能不能自动化 | `v0.1.0` |
 
-规划中（还没写，不列进上表）：需求建模、测试策略、用例审查、接口契约测试、flaky 治理。
+规划中（还没写，不列进上表）：测试策略、用例审查、接口契约测试、flaky 治理。
 
 合集的设计取向是**少而硬**。与其塞十个「看着完整」的 skill，不如让每一个都带实测记录和闸门。新增一个的完整规矩见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 

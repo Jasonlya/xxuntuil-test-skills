@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/Jasonlya/xxuntuil-test-skills/actions/workflows/check.yml"><img src="https://github.com/Jasonlya/xxuntuil-test-skills/actions/workflows/check.yml/badge.svg?branch=main" alt="CI"></a>
-  <a href="./skills/"><img src="https://img.shields.io/badge/skills-1-blue" alt="Skills"></a>
+  <a href="./skills/"><img src="https://img.shields.io/badge/skills-2-blue" alt="Skills"></a>
   <img src="https://img.shields.io/badge/deps-0-brightgreen" alt="Zero dependencies">
   <img src="https://img.shields.io/badge/python-3.8%2B-3776AB" alt="Python 3.8+">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License MIT"></a>
@@ -31,8 +31,9 @@ Three admission criteria. Miss one and it does not get in: **a fixed output form
 | Skill | What it solves | Trigger phrases | Version |
 |---|---|---|---|
 | [c2d-case-writing](./skills/c2d-case-writing/README.md) | Image-validation test cases for design-to-code (C2D): every case carries a real image URL plus a statement of why that image triggers the rule | C2D image validation, MasterGo image fill / export, design-to-code image testing | `v0.1.0` |
+| [requirement-analysis](./skills/requirement-analysis/README.md) | Requirement modelling: a 12-section model, testability four questions, and A/B/C automation grading, with a mandatory source on every conclusion | Requirement analysis, requirement modelling, PRD review, testability assessment, can this be automated | `v0.1.0` |
 
-Planned (not written yet, deliberately kept out of the table): requirement modelling, test strategy, case review, API contract testing, flaky-test triage.
+Planned (not written yet, deliberately kept out of the table): test strategy, case review, API contract testing, flaky-test triage.
 
 The bias is **few but solid**. Ten "looks complete" skills are worth less than a handful that each carry measured results and a gate. Full rules in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
