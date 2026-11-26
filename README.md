@@ -1,17 +1,14 @@
 [简体中文](./README.md) | [English](./README.en.md)
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/hero-dark.svg">
-    <img src="./assets/hero.svg" alt="xxuntuil-test-skills —— 面向 AI Agent 的测试 Skill 合集" width="820">
-  </picture>
+  <img src="./assets/hero.svg" alt="xxuntuil-test-skills —— 可单装的测试 Skill 合集，一个目录一个 skill" width="820">
 </p>
 
 <h1 align="center">xxuntuil-test-skills</h1>
 
-<p align="center"><strong>面向 AI Agent 的测试 Skill 合集。</strong></p>
+<p align="center"><strong>可单装的测试 Skill 合集。装一个是一个。</strong></p>
 
-<p align="center">一个目录一个 skill，拷进宿主目录即生效，不改宿主代码。<br>每个 skill 自带产出格式、铁律与能机判的闸门。</p>
+<p align="center">一个目录一个 skill，拷进宿主的 skills 目录就生效，不动你的仓库。<br>各自带产出格式、红线与能机判的闸门，互不依赖。</p>
 
 <p align="center">
   <a href="https://github.com/Jasonlya/xxuntuil-test-skills/actions/workflows/check.yml"><img src="https://github.com/Jasonlya/xxuntuil-test-skills/actions/workflows/check.yml/badge.svg?branch=main" alt="CI"></a>
@@ -23,9 +20,9 @@
 
 ---
 
-这不是提示词合集。把测试工程里那些**有产出、可判定、能回归**的环节拆成一个个 skill——每条规则、每个模板、每个闸门都是能落到文件上的东西，而不是「请你像资深测试那样思考」。
+这里不收提示词，也不做「装齐一套才跑得动」的框架。每个 skill 是独立的：拷一个目录过去就能用，不引用兄弟 skill，不改你宿主仓库的代码，卸掉也不留残渣。
 
-三个入选标准，缺一不进：**产出有固定格式**、**完成标准可判定**、**至少一处红线能机判**。
+三个入选标准，缺一不进：**产出有固定格式**、**完成标准可判定**、**至少一处红线能机判**。第三条是硬门槛，理由是规则只写在散文里，模型会跳过；写成脚本，退出码才是结论。所以这里的闸门都自带负向样例——只证明「能通过」不算数，得先证明「能拦住」。
 
 [技能清单](#技能清单) · [一个 skill 长什么样](#一个-skill-长什么样) · [仓库级闸门](#仓库级闸门) · [安装](#安装) · [新增一个 skill](#新增一个-skill) · [兼容性](#兼容性) · [实测记录](#实测记录)
 

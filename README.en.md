@@ -1,17 +1,14 @@
 [简体中文](./README.md) | [English](./README.en.md)
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/hero-dark.svg">
-    <img src="./assets/hero.svg" alt="xxuntuil-test-skills — a collection of testing skills for AI agents" width="820">
-  </picture>
+  <img src="./assets/hero.svg" alt="xxuntuil-test-skills — a collection of testing skills you can install one at a time" width="820">
 </p>
 
 <h1 align="center">xxuntuil-test-skills</h1>
 
-<p align="center"><strong>Testing skills for AI agents — as a collection.</strong></p>
+<p align="center"><strong>Testing skills, installable one at a time.</strong></p>
 
-<p align="center">One directory per skill; copy it into your host's skills folder and it works.<br>Every skill ships its own output format, red lines, and a gate a machine can run.</p>
+<p align="center">One directory per skill: copy it into your host's skills folder and it works. No changes to your repo.<br>Each ships its own output format, red lines and a machine-runnable gate, with no dependency on its siblings.</p>
 
 <p align="center">
   <a href="https://github.com/Jasonlya/xxuntuil-test-skills/actions/workflows/check.yml"><img src="https://github.com/Jasonlya/xxuntuil-test-skills/actions/workflows/check.yml/badge.svg?branch=main" alt="CI"></a>
@@ -23,9 +20,9 @@
 
 ---
 
-This is not a prompt collection. It takes the parts of test engineering that **produce artifacts, have decidable pass criteria, and can be regressed** and turns each into a skill — rules, templates and gates that land in files, not "please think like a senior QA".
+No prompts here, and no framework that only runs once every piece is installed. Each skill stands alone: copy one directory and it works, it does not reference its siblings, it does not touch your repo, and removing it leaves nothing behind.
 
-Three admission criteria. Miss one and it does not get in: **a fixed output format**, **decidable completion criteria**, and **at least one machine-checkable red line**.
+Three admission criteria. Miss one and it does not get in: **a fixed output format**, **decidable completion criteria**, **at least one machine-checkable red line**. The third is the hard gate, because a rule that only lives in prose gets skipped; a rule that lives in a script ends as an exit code. That is also why every gate here ships a negative sample — proving it can pass is worthless until you have proven it can block.
 
 [Skills](#skills) · [What a skill looks like](#what-a-skill-looks-like) · [Repo-level checks](#repo-level-checks) · [Install](#install) · [Adding a skill](#adding-a-skill) · [Compatibility](#compatibility) · [Measured results](#measured-results)
 

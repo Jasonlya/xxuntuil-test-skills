@@ -1,42 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" role="img" aria-label="xxuntuil-test-skills —— 面向 AI Agent 的测试 Skill 合集">
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" role="img" aria-label="xxuntuil-test-skills —— 可单装的测试 Skill 合集">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0.85" y2="1">
-      <stop offset="0" stop-color="#eaf3ff"/>
-      <stop offset="0.5" stop-color="#f3f0ff"/>
-      <stop offset="1" stop-color="#fdeff7"/>
+      <stop offset="0" stop-color="#070b14"/>
+      <stop offset="0.5" stop-color="#0e1526"/>
+      <stop offset="1" stop-color="#171233"/>
     </linearGradient>
     <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#1d4ed8"/>
-      <stop offset="0.55" stop-color="#4f46e5"/>
-      <stop offset="1" stop-color="#7e22ce"/>
+      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="0.55" stop-color="#a78bfa"/>
+      <stop offset="1" stop-color="#f0abfc"/>
     </linearGradient>
     <pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse">
-      <circle cx="2" cy="2" r="1.8" fill="#1e3a8a" opacity="0.13"/>
+      <circle cx="2" cy="2" r="1.8" fill="#60a5fa" opacity="0.16"/>
     </pattern>
     <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
       <feGaussianBlur stdDeviation="80"/>
     </filter>
+    <clipPath id="card">
+      <rect width="1600" height="640" rx="26"/>
+    </clipPath>
   </defs>
 
-  <rect width="1600" height="640" fill="url(#bg)"/>
-  <ellipse cx="270" cy="110" rx="280" ry="180" fill="#bfdbfe" opacity="0.55" filter="url(#soft)"/>
-  <ellipse cx="1370" cy="560" rx="320" ry="210" fill="#e9d5ff" opacity="0.5" filter="url(#soft)"/>
-  <rect width="1600" height="640" fill="url(#dots)"/>
+  <g clip-path="url(#card)">
+    <rect width="1600" height="640" fill="url(#bg)"/>
+    <ellipse cx="270" cy="110" rx="280" ry="180" fill="#1e3a8a" opacity="0.45" filter="url(#soft)"/>
+    <ellipse cx="1370" cy="560" rx="320" ry="210" fill="#4c1d95" opacity="0.45" filter="url(#soft)"/>
+    <rect width="1600" height="640" fill="url(#dots)"/>
+  </g>
+  <rect x="1" y="1" width="1598" height="638" rx="26" fill="none" stroke="#2b3550" stroke-width="2"/>
 
-  <text x="800" y="176" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="26" font-weight="600" fill="#1d4ed8">面向 AI Agent 的测试工程</text>
+  <text x="800" y="176" text-anchor="middle" font-family="'Helvetica Neue',Inter,system-ui,sans-serif" font-size="19" font-weight="600" letter-spacing="7" fill="#7dd3fc">SKILL COLLECTION</text>
 
   <text x="800" y="306" text-anchor="middle" font-family="'Helvetica Neue',Inter,system-ui,sans-serif" font-size="100" font-weight="700" fill="url(#title)" letter-spacing="-2">Test Skills</text>
 
-  <text x="800" y="368" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="30" font-weight="500" fill="#1e293b">测试 Skill 合集　·　一个目录一个 skill</text>
+  <text x="800" y="368" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="30" font-weight="500" fill="#e2e8f0">测试 Skill 合集 · 一个目录一个 skill</text>
 
-  <text x="800" y="418" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="23" fill="#64748b">把测试方法、产出标准与机械闸门，装进你的 Agent</text>
+  <text x="800" y="418" text-anchor="middle" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="22" fill="#94a3b8">每个 skill 自包含、不依赖其它 skill；判据落在脚本里，退出码就是结论</text>
 
-  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="22" font-weight="500" fill="#334155">
-    <rect x="492" y="474" width="242" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
-    <text x="613" y="510" text-anchor="middle">一个目录一个 skill</text>
-    <rect x="756" y="474" width="154" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
-    <text x="833" y="510" text-anchor="middle">零依赖脚本</text>
-    <rect x="932" y="474" width="176" height="58" rx="29" fill="#ffffff" opacity="0.82" stroke="#c7d2fe" stroke-width="1.5"/>
-    <text x="1020" y="510" text-anchor="middle">退出码即判决</text>
+  <g font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif" font-size="22" font-weight="500" fill="#cbd5e1">
+    <rect x="481" y="474" width="176" height="58" rx="29" fill="#ffffff" opacity="0.07" stroke="#3f4a63" stroke-width="1.5"/>
+    <text x="569" y="510" text-anchor="middle">单装即用</text>
+    <rect x="679" y="474" width="198" height="58" rx="29" fill="#ffffff" opacity="0.07" stroke="#3f4a63" stroke-width="1.5"/>
+    <text x="778" y="510" text-anchor="middle">零依赖脚本</text>
+    <rect x="899" y="474" width="220" height="58" rx="29" fill="#ffffff" opacity="0.07" stroke="#3f4a63" stroke-width="1.5"/>
+    <text x="1009" y="510" text-anchor="middle">退出码即判决</text>
   </g>
 </svg>
