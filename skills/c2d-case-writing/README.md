@@ -29,11 +29,12 @@
 
 | 你的诉求 | 该去哪 |
 |---|---|
-| 非图片类功能用例（表单、权限、状态机、接口契约） | 通用用例 skill |
-| 需求建模、测试策略与范围决策 | 需求分析 / 测试策略 skill |
-| 用例转 Playwright / API 自动化 | E2E / 接口测试 skill |
+| 非图片类功能用例（表单、权限、状态机、接口契约） | 不在本 skill |
+| 需求建模 | 本合集的 [requirement-analysis](../requirement-analysis/README.md) |
+| 测试策略与范围决策 | 不在本 skill |
+| 用例转 Playwright / API 自动化 | 不在本 skill |
 | 只要场景清单、不要用例 | 直接读 [image-rule-matrix.md](./references/image-rule-matrix.md)，不必触发本 skill |
-| 已确认缺陷的根因定位 | Bug 分析 skill |
+| 已确认缺陷的根因定位 | 不在本 skill |
 
 完整边界写在 [SKILL.md](./SKILL.md) 的 When NOT to Use。
 

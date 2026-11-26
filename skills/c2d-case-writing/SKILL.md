@@ -38,11 +38,12 @@ Schema 永远可由 markmap 再生，不要求人维护两份；markmap 改动�
 
 ## When NOT to Use
 
-- 非图片类功能用例（表单、权限、状态机、接口契约）→ `test-case-writing`（qa-skills / 通用用例 skill）
-- 需求建模、测试策略与范围决策 → `requirement-analysis` / `test-strategy`
-- 把用例转成 Playwright / API 自动化脚本 → `automated-e2e-testing` / `api-testing`
+- 非图片类功能用例（表单、权限、状态机、接口契约）→ 不在本 skill
+- 需求建模 → 本合集的 `requirement-analysis`
+- 测试策略与范围决策 → 不在本 skill，也不依赖外部 skill
+- 把用例转成 Playwright / API 自动化脚本 → 不在本 skill
 - 只要场景清单、不要用例 → 直接读 `references/image-rule-matrix.md`，不必触发本 skill
-- 已确认缺陷的根因定位 → `bug-analysis`
+- 已确认缺陷的根因定位 → 不在本 skill
 
 ## 五条铁律
 
@@ -180,9 +181,10 @@ P0 占比超过 35% 时闸门告警——冒烟集被稀释就失去筛选意义
 | 场景清单写得很全，用例一条不落 | 看着专业，实际没测 | 阶段一就做 include/exclude 判定并留理由 |
 | 拿不确定的 API 字段名硬写前置 | 用例前提就是错的，执行必然卡住 | 未核实项写 `TODO：向谁确认什么` |
 
-## 与其他 skill 配合
+## 与相邻环节的关系
 
-- **上游**：需求/设计文档 → `requirement-analysis`（需求模型）；范围与深度决策 → `test-strategy`（图片相关的类型轴按十轴矩阵走，视觉一致性对应「视觉一致性」轴）
-- **下游**：用例转 UI 自动化 → `automated-e2e-testing`（其工作流零踩点可直接产出图片元素定位）；接口侧图片 URL 校验 → `api-testing`
-- **平级**：非图片功能用例 → `test-case-writing`；已确认缺陷根因 → `bug-analysis`
+本 skill 只管「图片校验用例怎么写」，上下游都不假设宿主里装了什么：
+
+- **上游**：需求 / 设计文档可直接作为输入；若宿主里同时装了本合集的 `requirement-analysis`，先出需求模型再定图片校验范围会更准，但没有它也能独立工作
+- **下游**：产出物是 Markdown 用例 + YAML schema + 链接核验报告，交给谁执行都行，不依赖任何特定自动化框架
 - **本 skill 私有资产**：`references/image-rule-matrix.md`（场景全集）、`references/image-fixture-registry.md`（真实链接）、`references/case-format-c2d.md`（格式细则）、`assets/case-template.md`（拼装起点）、`scripts/`（两道闸门）
